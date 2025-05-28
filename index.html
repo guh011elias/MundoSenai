@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Projeto VR & NR-23 - Estilo 4VR</title>
+<style>
+  /* Reset básico */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #0b0b0b;
+    color: #eee;
+    overflow-x: hidden;
+  }
+  nav {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    background: rgba(15, 15, 15, 0.9);
+    display: flex;
+    justify-content: center;
+    padding: 18px 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(255, 127, 80, 0.3);
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+  }
+  nav a {
+    color: #ff6a00;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    text-decoration: none;
+    position: relative;
+    padding: 6px 0;
+    transition: color 0.3s ease;
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: #ff6a00;
+    transition: width 0.3s ease;
+  }
+  nav a:hover,
+  nav a.active {
+    color: #ffa500;
+  }
+  nav a:hover::after,
+  nav a.active::after {
+    width: 100%;
+  }
+
+  header {
+    height: 100vh;
+    background: url('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1400&q=80') center center / cover no-repeat fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+    color: #ff6a00;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 0;
+  }
+  header > * {
+    position: relative;
+    z-index: 1;
+  }
+  header h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    text-shadow: 0 0 10px #ff6a00aa;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1s forwards 0.3s;
+  }
+  header p {
+    font-size: 1.5rem;
+    max-width: 650px;
+    margin: 0 auto 40px;
+    font-weight: 500;
+    color: #ff9c3b;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1s forwards 0.6s;
+  }
+  .btn-primary {
+    background: linear-gradient(45deg, #ff6a00, #ffa500);
+    padding: 16px 45px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(255, 106, 0, 0.5);
+    transition: background 0.4s ease, box-shadow 0.4s ease, transform 0.2s ease;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1s forwards 0.9s;
+  }
+  .btn-primary:hover {
+    background: linear-gradient(45deg, #ffa500, #ff4500);
+    box-shadow: 0 15px 20px rgba(255, 69, 0, 0.7);
+    transform: scale(1.05);
+  }
+
+  main {
+    max-width: 1000px;
+    margin: 80px auto 80px;
+    padding: 0 20px;
+  }
+  section {
+    margin-bottom: 70px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  section h2 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #ff6a00;
+    text-shadow: 1px 1px 4px #000000aa;
+  }
+  section p, section ul {
+    font-size: 1.15rem;
+    color: #ddd;
+    line-height: 1.7;
+  }
+  ul {
+    padding-left: 1.4rem;
+    list-style-type: square;
+    margin-top: 12px;
+  }
+  ul li {
+    margin-bottom: 14px;
+  }
+  .video-wrapper {
+    max-width: 100%;
+    box-shadow: 0 0 30px #ff6a0055;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  footer {
+    text-align: center;
+    padding: 25px 10px;
+    color: #ff6a00cc;
+    font-weight: 600;
+    text-shadow: 0 0 5px #000;
+  }
+
+  /* Imagens estilo cartoon */
+  .cartoon-images {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 30px;
+  }
+  .cartoon-images img {
+    width: 250px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px #ff6a0055;
+    transition: transform 0.3s ease;
+  }
+  .cartoon-images img:hover {
+    transform: scale(1.07);
+    box-shadow: 0 0 30px #ff6a00cc;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 720px) {
+    header h1 {
+      font-size: 2.8rem;
+    }
+    section h2 {
+      font-size: 2rem;
+    }
+    .cartoon-images img {
+      width: 90%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <ul>
+    <li><a href="#" class="active">Início</a></li>
+    <li><a href="#sobre">Sobre VR</a></li>
+    <li><a href="#objetivo">Objetivo</a></li>
+    <li><a href="#beneficios">Benefícios</a></li>
+    <li><a href="#video">Demo</a></li>
+  </ul>
+</nav>
+
+<header>
+  <h1>Projeto VR & NR-23</h1>
+  <p>Simulação de incêndio industrial com Realidade Virtual para treinar segurança com imersão total</p>
+  <button class="btn-primary" onclick="document.getElementById('sobre').scrollIntoView({behavior:'smooth'})">Saiba Mais</button>
+</header>
+
+<main>
+  <section id="sobre" class="reveal">
+    <h2>O que é Realidade Virtual?</h2>
+    <p>A Realidade Virtual (VR) é uma tecnologia que cria ambientes digitais tridimensionais e imersivos, permitindo que usuários interajam de forma natural e segura em simulações realistas.</p>
+    <p>Nosso projeto utiliza VR para recriar cenários de incêndio em ambientes industriais, oferecendo treinamentos práticos que ajudam a preparar equipes para situações de emergência reais.</p>
+    <div class="cartoon-images">
+      <img src="vr_cartoon_1.png" alt="Ilustração VR 1" />
+      <img src="vr_cartoon_2.png" alt="Ilustração VR 2" />
+      <img src="vr_cartoon_3.png" alt="Ilustração VR 3" />
+    </div>
+  </section>
+
+  <section id="objetivo" class="reveal">
+    <h2>Objetivo do Projeto</h2>
+    <ul>
+      <li>Capacitar colaboradores para agir com segurança em emergências de incêndio</li>
+      <li>Diminuir acidentes e danos materiais em empresas</li>
+      <li>Assegurar conformidade com a NR-23 (Norma Regulamentadora para prevenção e combate a incêndios)</li>
+      <li>Promover treinamentos imersivos, repetíveis e econômicos</li>
+      <li>Melhorar a retenção do conhecimento por meio da experiência prática</li>
+    </ul>
+  </section>
+
+  <section id="beneficios" class="reveal">
+    <h2>Benefícios para a Indústria</h2>
+    <p>O uso da Realidade Virtual em treinamentos traz diversos benefícios para o setor industrial, como:</p>
+    <ul>
+      <li>Redução de custos com treinamentos presenciais e equipamentos</li>
+      <li>Ambiente seguro para treinar situações de alto risco sem perigos reais</li>
+      <li>Melhoria no desempenho dos colaboradores e tempo de resposta em emergências</li>
+      <li>Aumento da conscientização e cultura de segurança na empresa</li>
+      <li>Facilidade para atualização e personalização dos cenários de treinamento</li>
+    </ul>
+  </section>
+
+  <section id="video" class="reveal">
+    <h2>Vídeo Demonstrativo</h2>
+    <div class="video-wrapper">
+      <video controls poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80">
+        <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm" />
+        Seu navegador não suporta vídeo.
+      </video>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © 2025 Segurança Industrial - Projeto VR & NR-23
+</footer>
+
+<script>
+  // Scroll reveal simples
+  const reveals = document.querySelectorAll('.reveal');
+  function revealOnScroll() {
+    for(const elem of reveals) {
+      const top = elem.getBoundingClientRect().top;
+      if(top < window.innerHeight - 100) {
+        elem.classList.add('visible');
+      }
+    }
+  }
+  window.addEventListener('scroll', revealOnScroll);
+  window.addEventListener('load', revealOnScroll);
+</script>
+
+</body>
+</html>
